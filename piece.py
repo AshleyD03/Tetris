@@ -9,13 +9,13 @@ class Piece:
     self._x = x
     self._y = y
 
-  #TODO
   def moveLeft (self):
-    return 
+    if (self._x + len(self._body[0]) + 1 < 10): 
+      self._x += 1
 
-  #TODO
   def moveRight (self):
-    return 
+    if (self._x - 1 < 0):
+      self._x -= 1
 
   def rotateRight(self):
     self._body = self.rotateBody(self._body)
@@ -24,7 +24,7 @@ class Piece:
     return self._body 
 
   def getPos(self):
-    return {x: self._x, y: self._y}
+    return {'x': self._x, 'y': self._y}
 
   @staticmethod
   def rotateBody (body):
