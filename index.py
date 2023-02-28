@@ -1,5 +1,7 @@
+from math import floor
 import keyboard
 from time import sleep
+from game import Game
 from piece import Piece
 from colorama import init 
 
@@ -17,35 +19,55 @@ def getInput ():
 
 def main ():
   init()
-  currentPiece = Piece() 
-
-  while True:
+  game = Game()
+  clock = 0
+  while game.isRunning():
     ks = getInput()
     for key in ks:
+      onKeyPress(key, game)
+      game.printScreen()
 
-      # Check if actual keypress
-      if (key.event_type == "up"):
-        continue
+    # Time before going down
+    clock += 1 
 
-      # Translate key to move
-      name = key.name 
-      if (name in moves):
-        name = moves[key.name]
+    if (clock >= max(5, 60 - floor(game.getScore() / 100))):
+      clock = 0 
+      game.moveDown()
 
-      # Match key to action
-      match name:
-        case "up":
-          currentPiece.rotateRight();
+    game.printScreen()
 
-        case "r":
-          currentPiece = Piece () 
+def onKeyPress (key: keyboard.KeyboardEvent, game: Game):
+  # Check if actual keypress
+  if (key.event_type == "up"):
+    return 
+  
+  # Translate key name to action
+  action = key.name 
+  if (action in moves):
+    action = moves[key.name]
 
+  # Perform action
+  match action:
+    case "up":
+      print(action)
+      game.rotateRight();
+    
+    case "r":
+      print(action)
+      game.swapPieces();
 
-      print("------")
-      for line in currentPiece.getBody():
-        print(' '.join(line))
-      print("------")
-      sleep(0.016)
+    case "down":
+      print(action)
+      game.moveDown()
+
+    case "left":
+      print(action)
+      game.moveLeft()
+
+    case "right":
+      print(action)
+      game.moveRight()
+
 
 if __name__ == "__main__":
   main()

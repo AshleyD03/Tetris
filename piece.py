@@ -3,31 +3,49 @@ from colorama import Fore
 
 class Piece:
 
-  def __init__ (self, x=1, y=1):
+  def __init__ (self):
     self._num = randint (0,5)
     self._body = self.makeBody(self._num);
-    self._x = x
-    self._y = y
+    self._x = 4
+    self._y = 20
+    self._changed = True
+
 
   def moveLeft (self):
-    if (self._x + len(self._body[0]) + 1 < 10): 
-      self._x += 1
+    self._x -= 1
+    self.setChanged(True)
+
 
   def moveRight (self):
-    if (self._x - 1 < 0):
-      self._x -= 1
+    self._x += 1
+    self.setChanged(True)
+
+
+  def moveDown (self):
+    self._y += 1;
+    self.setChanged(True)
+
 
   def rotateRight(self):
     self._body = self.rotateBody(self._body)
+    self.setChanged(True)
+
 
   def getBody(self):
     return self._body 
 
+
+  def resetPos(self):
+    self._x=4
+    self._y=20
+
+
   def getPos(self):
     return {'x': self._x, 'y': self._y}
 
+
   @staticmethod
-  def rotateBody (body):
+  def rotateBody (body: list[list[str]]):
     def rotate (body): 
       return list(zip(*body[::-1]))
 
@@ -42,8 +60,17 @@ class Piece:
 
     return body 
 
+
+  def getChanged(self):
+    return self._changed
+  
+
+  def setChanged(self, a: bool):
+    self._changed = a 
+
+
   @staticmethod
-  def makeBody (k):
+  def makeBody (k: list[list[str]]):
     body = []
     color = Fore.CYAN
     match k: 
@@ -106,4 +133,3 @@ class Piece:
 
     body = list(map(lambda x: list(map(lambda y: color + y + Fore.RESET if y != '' else ' ', x)), body))
     return body 
-
